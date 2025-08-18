@@ -1,48 +1,35 @@
-//let's enhance Mine merge_sort algo :: garchu
 #include<bits/stdc++.h>
 #include<chrono>
 
 using namespace std;
 using namespace std::chrono;
 
-void mergeSortedArr(vector<int>& arr , int l , int m , int r , vector<int>& temp) {
-    int i=l , j=m+1 , k=l;
-    while(i<=m && j<=r) {
-        if(arr[i] <= arr[j]) {
-            temp[k] = arr[i];
-            ++i;
-        } else {
-            temp[k] = arr[j];
-            ++j;
-        }
+void mergeSortedArr(vector<int>& arr , int l , int m , int r) {
+    int n1 = m-l+1 , n2 = r-m;
 
-        ++k;
+    vector<int> left(n1) , right(n2);
+    for(int i=0; i<n1; i++) left[i] = arr[l+i];
+    for(int i=0; i<n2; i++) right[i] = arr[m+1+i];
+
+    int i=0 , j=0 , k=l;
+    while(i < n1 && j < n2) {
+        if(left[i] <= right[j]) arr[k++] = left[i++];
+        else arr[k++] = right[j++];
     }
 
-    while(i <= m) {
-        temp[k] = arr[i];
-        ++k; ++i;
-    }
-
-    while(j <= r) {
-        temp[k] = arr[j];
-        ++k; ++j;
-    }
-
-    for(int idx=l; idx<=r; idx++) {
-        arr[idx] = temp[idx];
-    }
+    while(i < n1) arr[k++] = left[i++];
+    while(j < n2) arr[k++] = right[j++];
 }
 
-void mergeSort(vector<int>& arr , int l , int r , vector<int>& temp) {
+void mergeSort(vector<int>& arr , int l , int r) {
     if(l >= r) return;
 
     int m = l + (r-l) / 2; 
     // l - m - m+1 - r
-    mergeSort(arr , l , m , temp);
-    mergeSort(arr , m+1 , r , temp);
+    mergeSort(arr , l , m);
+    mergeSort(arr , m+1 , r);
     
-    mergeSortedArr(arr , l , m , r , temp);
+    mergeSortedArr(arr , l , m , r);
 }
 
 int main() {
@@ -64,11 +51,9 @@ int main() {
     worstCase = bestCase;
     reverse(worstCase.begin() , worstCase.end());
 
-    vector<int> temp(n);
-
     //avg-Case
     auto start1 = high_resolution_clock::now();
-    mergeSort(avgCase , 0 , n-1 , temp);
+    mergeSort(avgCase , 0 , n-1);
     auto end1 = high_resolution_clock::now();
 
     auto duration1 = duration_cast<microseconds>(end1 - start1);
@@ -76,7 +61,7 @@ int main() {
 
     //best-Case
     auto start2 = high_resolution_clock::now();
-    mergeSort(bestCase , 0 , n-1 , temp);
+    mergeSort(bestCase , 0 , n-1);
     auto end2 = high_resolution_clock::now();
 
     auto duration2 = duration_cast<microseconds>(end2 - start2);
@@ -84,7 +69,7 @@ int main() {
 
     //worst-Case
     auto start3 = high_resolution_clock::now();
-    mergeSort(worstCase , 0 , n-1 , temp);
+    mergeSort(worstCase , 0 , n-1);
     auto end3 = high_resolution_clock::now();
 
     auto duration3 = duration_cast<microseconds>(end3 - start3);
