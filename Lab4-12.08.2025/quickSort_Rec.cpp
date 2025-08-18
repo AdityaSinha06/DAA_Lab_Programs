@@ -5,7 +5,7 @@ using namespace std;
 using namespace std::chrono;
 
 int partition(vector<int>& arr , int l , int r) {
-    int randomPivot = l + (r-l) / 2;
+    int randomPivot = l + rand() % (r-l+1); //random pivot
     int pivotEle = arr[randomPivot];
 
     int smallerCnt = 0;
@@ -55,7 +55,7 @@ int main() {
     worstCase = bestCase;
     reverse(worstCase.begin() , worstCase.end());
 
-     //avg-Case
+    //avg-Case
     auto start1 = high_resolution_clock::now();
     quickSort(avgCase , 0 , n-1);
     auto end1 = high_resolution_clock::now();
